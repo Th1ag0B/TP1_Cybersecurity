@@ -332,8 +332,8 @@ class ChatApplication:
 def main():
     root = tk.Tk()
     app = ChatApplication(root)
-    window_width = 800
-    window_height = 600
+    window_width = 1000
+    window_height = 800
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     x_coordinate = (screen_width - window_width) // 2
