@@ -155,8 +155,8 @@ class ChatApplication:
         for user in reversed(self.online_users):  # Adiciona o próprio usuário no topo da lista
             if user == self.own_username:  # Destaca o próprio usuário na lista
                 self.online_users_listbox.insert(tk.END, f"I'm: {user}")
-                # Configura a cor do texto para o usuário atual como verde
-                self.online_users_listbox.itemconfigure(tk.END, fg="green")
+                # Configura a cor do texto para o usuário atual x cor
+                self.online_users_listbox.itemconfigure(tk.END, fg="red")
             else:
                 self.online_users_listbox.insert(tk.END, user)
 
