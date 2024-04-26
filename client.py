@@ -16,7 +16,7 @@ recipient_public_key = None
 class ChatApplication:
     def __init__(self, master):
         self.master = master
-        self.master.title("Chat Application")
+        self.master.title("Secure Chat Application")
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.online_users = []
         self.private_chats = {}  # Dicionário para manter as janelas de chat privado
@@ -25,7 +25,7 @@ class ChatApplication:
         self.public_key = None  # Chave pública do cliente
         
         # Estilo
-        self.master.config(bg="#331a66")  # Fundo roxo escuro
+        self.master.config(bg="#191919")  # Fundo cinza escuro
 
         # Janela para inserir o nome do usuário
         self.setup_name_input()
@@ -42,22 +42,20 @@ class ChatApplication:
     
     def setup_name_input(self):
         # Frame para o nome de usuário
-        self.name_frame = tk.Frame(self.master, bg="#331a66")  # Fundo roxo escuro
-        self.name_frame.pack(expand=True, pady=20)
+        self.name_frame = tk.Frame(self.master, bg="#191919")  # Fundo cinza escuro
+        self.name_frame.pack(expand=True, pady=50)
 
-        self.name_label = tk.Label(self.name_frame, text="Username:", bg="#331a66", fg="#ff00bf", font=("Arial", 12))
+        self.name_label = tk.Label(self.name_frame, text="Welcome to Secure Chat", bg="#191919", fg="#FFFFFF", font=("Arial", 18))
+        self.name_label.pack(pady=20)
+
+        self.name_label = tk.Label(self.name_frame, text="Enter your Username:", bg="#191919", fg="#FFFFFF", font=("Arial", 14))
         self.name_label.pack()
 
-        self.name_entry = tk.Entry(self.name_frame, font=("Arial", 12))
-        self.name_entry.pack(pady=5)
+        self.name_entry = tk.Entry(self.name_frame, font=("Arial", 14))
+        self.name_entry.pack(pady=10)
 
-        # Selecionar automaticamente o campo de entrada ao abrir a interface
-        self.name_entry.focus_set()
-
-        self.name_entry.bind("<Return>", lambda event: self.submit_name())
-
-        self.name_submit_button = tk.Button(self.name_frame, text="Enter", command=self.submit_name, bg="#ff00bf", fg="white", font=("Arial", 12, "bold"))
-        self.name_submit_button.pack(pady=5)
+        self.name_submit_button = tk.Button(self.name_frame, text="Enter Chat", command=self.submit_name, bg="#FF5A5F", fg="white", font=("Arial", 14, "bold"))
+        self.name_submit_button.pack()
 
     def submit_name(self):
         name = self.name_entry.get()
@@ -164,41 +162,46 @@ class ChatApplication:
 
     def setup_chat_ui(self):
         # Interface
-        self.online_users_frame = tk.Frame(self.master, width=200, bg="#331a66")  # Fundo roxo escuro
-        self.online_users_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.online_users_frame = tk.Frame(self.master, width=200, bg="#282828", bd=2, relief=tk.SUNKEN)  # Darker background color, added border and relief
+        self.online_users_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        self.online_users_label = tk.Label(self.online_users_frame, text="Online Users", bg="#331a66", fg="#ff00bf", font=("Arial", 12))
-        self.online_users_label.pack()
+        self.online_users_label = tk.Label(self.online_users_frame, text="Online Users", bg="#282828", fg="#FFFFFF", font=("Helvetica", 14, "bold"))  # Changed font and increased font size
+        self.online_users_label.pack(pady=10)
 
-        self.online_users_listbox = tk.Listbox(self.online_users_frame, bg="#663399", font=("Arial", 12))
+        self.online_users_listbox = tk.Listbox(self.online_users_frame, bg="#383838", fg="#FFFFFF", font=("Helvetica", 12), selectbackground="#484848")  # Adjusted colors
         self.online_users_listbox.pack(fill=tk.BOTH, expand=True)
 
         # Evento de clique na lista de usuários online
         self.online_users_listbox.bind("<Button-1>", lambda event: self.open_chat(event))
 
-        self.chat_frame = tk.Frame(self.master, bg="#663399", bd=2, relief=tk.GROOVE)
-        self.chat_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.chat_frame = tk.Frame(self.master, bg="#484848")  # Adjusted background color
+        self.chat_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.chat_label = tk.Label(self.chat_frame, text="Global Chat", bg="#663399", fg="#ff00bf", font=("Arial", 14))
-        self.chat_label.pack(pady=10)
+        # Updated layout for chat interface
+        self.chat_label = tk.Label(self.chat_frame, text="Global Chat", bg="#484848", fg="#FFFFFF", font=("Helvetica", 16, "bold"))  # Changed font and increased font size
+        self.chat_label.pack(pady=(10, 5), padx=10, anchor="nw", fill=tk.X)
 
-        self.chat_text = tk.Text(self.chat_frame, state='disabled', bg="#663399", fg="white", font=("Arial", 12))
-        self.chat_text.pack(fill=tk.BOTH, expand=True)
+        self.chat_text = tk.Text(self.chat_frame, state='disabled', bg="#585858", fg="#FFFFFF", font=("Helvetica", 12))  # Adjusted colors
+        self.chat_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
-        self.message_entry = tk.Entry(self.chat_frame, width=60, font=("Arial", 12))
+        self.message_entry = tk.Entry(self.chat_frame, font=("Helvetica", 12), bg="#585858", fg="#FFFFFF")  # Adjusted colors
         self.message_entry.insert(tk.END, "Write a message to your friends")
         self.message_entry.bind("<FocusIn>", lambda event: self.clear_entry())
         self.message_entry.bind("<Return>", lambda event: self.send_message(recipient_public_key, event))  # Evento Enter
-        self.message_entry.pack(side=tk.LEFT, fill=tk.X, padx=5, pady=(10, 5))
+        self.message_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=10, pady=5)
 
         # Focar automaticamente no campo de entrada de mensagem
         self.message_entry.focus_set()
 
-        self.send_button = tk.Button(self.chat_frame, text="Send", command=lambda: self.send_message(recipient_public_key, None), bg="#ff00bf", fg="white", font=("Arial", 12, "bold"))
-        self.send_button.pack(side=tk.LEFT, padx=5, pady=(10, 5))
+        # Create a frame to contain the send and close buttons
+        button_frame = tk.Frame(self.chat_frame, bg="#484848")
+        button_frame.pack(fill=tk.X, padx=10, pady=(5, 10), anchor="se")
 
-        self.close_button = tk.Button(self.chat_frame, text="Close", command=self.close_application, bg="#ff0000", fg="white", font=("Arial", 12, "bold"))
-        self.close_button.pack(side=tk.LEFT, padx=5, pady=(10, 5))
+        self.send_button = tk.Button(button_frame, text="Send", command=lambda: self.send_message(recipient_public_key, None), bg="#FF5A5F", fg="white", font=("Helvetica", 12, "bold"))  # Adjusted colors
+        self.send_button.pack(side=tk.LEFT, padx=(0, 10))
+
+        self.close_button = tk.Button(button_frame, text="Close", command=self.close_application, bg="#FF5A5F", fg="white", font=("Helvetica", 12, "bold"))  # Adjusted colors
+        self.close_button.pack(side=tk.LEFT)
 
         # Adiciona evento para fechar a aplicação e a interface ao pressionar "Esc"
         self.master.bind("<Escape>", lambda event: self.close_application())
@@ -329,8 +332,8 @@ class ChatApplication:
 def main():
     root = tk.Tk()
     app = ChatApplication(root)
-    window_width = 1024
-    window_height = 720
+    window_width = 800
+    window_height = 600
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     x_coordinate = (screen_width - window_width) // 2
